@@ -7,7 +7,7 @@
             @foreach($categories as $categorie)
                 <!-- Single Catagory -->
                     <div class="single-products-catagory clearfix">
-                        <a href="/products/{{$categorie->CatégorieId}}/having">
+                        <a href="/categorie/{{$categorie->CatégorieId}}">
                             <img src="/storage/img-categories/{{$categorie->image->ImageLink}}" alt="">
                             <!-- Hover Content -->
                             <div class="hover-content">

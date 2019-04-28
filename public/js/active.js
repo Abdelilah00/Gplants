@@ -98,6 +98,7 @@
     $('.slider-range-price').each(function () {
         var min = jQuery(this).data('min');
         var max = jQuery(this).data('max');
+        var step = jQuery(this).data('step');
         var unit = jQuery(this).data('unit');
         var value_min = jQuery(this).data('value-min');
         var value_max = jQuery(this).data('value-max');
@@ -107,12 +108,15 @@
             range: true,
             min: min,
             max: max,
+            step: step,
             values: [value_min, value_max],
             slide: function (event, ui) {
-                var result = label_result + " " + unit + ui.values[0] + ' - ' + unit + ui.values[1];
-                console.log(t);
+                var result = label_result + " " + ui.values[0] + unit + ' - ' + ui.values[1] + unit ;
                 t.closest('.slider-range').find('.range-price').html(result);
+                $('#minPrice').val(ui.values[0]);
+                $('#maxPrice').val(ui.values[1]);
             }
+
         });
     });
 

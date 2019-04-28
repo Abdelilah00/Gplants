@@ -48,33 +48,39 @@
 
         <div class="widget-desc">
             <div class="slider-range">
+                <div data-min="5" data-max="200" data-unit="DH " data-step='5'
+                     class="slider-range-price ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all"
+                     data-value-min="5" data-value-max="200" data-label-result="">
 
-                <label for="rangePrimary">Your Price :</label>
-                <input type="text" id="rangePrimary" name="rangePrimary" value="" />
-                <p id="priceRangeSelected"></P>
+                    <div class="ui-slider-range ui-widget-header ui-corner-all"></div>
+                    <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"></span>
+                    <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"></span>
+                </div>
+                <div class="range-price">5DH - 200DH</div>
+                <input type="hidden" id="maxPrice" value="" class="prices">
+                <input type="hidden" id="minPrice" value="" class="prices">
 
             </div>
         </div>
+
     </div>
 </div>
 <script>
-    $("#rangePrimary").ionRangeSlider({
-        type: "double",
-        grid: true,
-        min: 0,
-        max: 1000,
-        from: 200,
-        to: 800,
-        prefix: "£"
-    });
+
 
     $(document).ready(function () {
         let categories = [0];
         let colors = [0];
-        let minPrice;
-        let maxPrice;
-        let sortedBy;
+        //get min and max price from data base
+        let minPrice = 5;
+        let maxPrice = 200;
+        let sortedBy = 'Prix';
 
+        $(".slider-range").mouseup(function(){
+            minPrice = $('#minPrice').val();
+            maxPrice = $('#maxPrice').val();
+            getProducts();
+        });
         $('.categories').on('click', function () {
             $(this).toggleClass('active', null);
             $('#all-products').removeClass('active');
@@ -89,7 +95,7 @@
                 categories.push(newFilter);
             }
 
-            getMethodFilter();
+            getProducts();
         });
         $('.colors').on('click', function () {
             $(this).toggleClass('active', null);
@@ -103,30 +109,29 @@
                 // Element was not found, add it.
                 colors.push(newFilter);
             }
-
-            getMethodFilter();
+            getProducts();
         });
-        $("#rangePrimary").on("change", function () {
-            let $this = $(this),
-                value = $this.prop("value").split(";");
-            minPrice = value[0];
-            maxPrice = value[1];
-            $("#priceRangeSelected").text("Lower Price Range = £" + minPrice + " , Upper Price Range = £" + maxPrice);
+        $('#sortedBy').on('change', function () {
+            sortedBy = $(this).val();
+            getProducts();
         });
 
-        function getMethodFilter() {
-            let filters = [categories, colors];
-            console.log('filters ====>' + filters);
+        function getProducts() {
             $('#result').html(null);
-
             $.ajax({
                 type: 'GET',
                 url: '{{URL::to('filters')}}',
-                data: {'filters': filters},
+                data: {
+                    'categories': categories,
+                    'colors': colors,
+                    'minPrice': minPrice,
+                    'maxPrice': maxPrice,
+                    'sortedBy': sortedBy
+                },
                 success: function (data) {
                     $('#result').html(data);
                 }
-            })
+            });
         }
 
     });

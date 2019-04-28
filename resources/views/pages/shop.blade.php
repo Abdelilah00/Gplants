@@ -20,13 +20,10 @@
                         <div class="product-sorting d-flex">
                             <div class="sort-by-date d-flex align-items-center mr-15">
                                 <p>Sort by</p>
-                                <form action="#" method="get">
-                                    <select name="select" id="sortBydate">
-                                        <option value="value">Date</option>
-                                        <option value="value">Newest</option>
-                                        <option value="value">Popular</option>
-                                    </select>
-                                </form>
+                                <select name="select" id="sortedBy">
+                                    <option value="Prix">Prix</option>
+                                    <option value="ProductId">ProductId</option>
+                                </select>
                             </div>
                         </div>
                     </div>

@@ -24,15 +24,17 @@ class ProductsController extends Controller
     public function havingFilters(Request $request)
     {
         if ($request->ajax()) {
-            $categories = $request->filters[0];
-            $colors = $request->filters[1];
+            $categories = $request->categories;
+            $colors = $request->colors;
             $minPrice = $request->minPrice;
             $maxPrice = $request->maxPrice;
+            $sortedBy = $request->sortedBy;
+
 
             if (count($categories) == 1)
-                $categories = Catégorie::orderBy('CatégorieId')->get('CatégorieId');
+                $categories = Catégorie::all('CatégorieId');
             if (count($colors) == 1)
-                $colors = Color::orderBy('ColorId')->get('ColorId');
+                $colors = Color::all('ColorId');
 
 
             $ids = array();
@@ -46,40 +48,24 @@ class ProductsController extends Controller
             foreach ($products as $Key => $product) {
                 array_push($ids, $product->ProductId);
             }
-            $products = Product::whereIn('ProductId', $ids)->get();
+
+            $products = Product::orderBy($sortedBy)->whereIn('ProductId', $ids)->get();
+
             return Response(view('ajax.products')->with('products', $products));
         }
     }
 
-    public function havingCategories(Request $request)
+    public function havingCategorie($categorieId)
     {
-        $ids = array();
-        $products = DB::table('products')
-            ->whereIn('CatégorieId', $request->filters)
-            ->join('in_catégorie', 'in_catégorie.ProductId', '=', 'products.ProductId')->get('Products.ProductId');
+        $products= Catégorie::find($categorieId)->products()->get();
 
-        foreach ($products as $Key => $product) {
-            array_push($ids, $product->ProductId);
-        }
-
-        $products = Product::whereIn('ProductId', $ids)->get();
-        return Response(view('ajax.products')->with('products', $products));
+        return view('pages.shop')->with('products', $products);
 
     }
-
-    public function havingColors(Request $request)
+    public function havingColor($colorId)
     {
-        $ids = array();
-        $products = DB::table('products')
-            ->WhereIn('ColorId', $request->filters)
-            ->join('have_a_color', 'have_a_color.ProductId', '=', 'products.ProductId')->get('Products.ProductId');
-
-        foreach ($products as $Key => $product) {
-            array_push($ids, $product->ProductId);
-        }
-
-        $products = Product::whereIn('ProductId', $ids)->get();
-        return Response(view('ajax.products')->with('products', $products));
+        $products= Color::find($colorId)->products()->get();
+        return view('pages.shop')->with('products', $products);
     }
 
     /**

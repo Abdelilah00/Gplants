@@ -19,8 +19,8 @@ Route::get('products','ProductsController@index');
 Route::get('products/{id}','ProductsController@show');
 
 Route::get('filters','ProductsController@havingFilters');
-Route::get('colors','ProductsController@havingColors');
-Route::get('categories','ProductsController@havingCategories');
+Route::get('categorie/{categorieId}','ProductsController@havingCategorie');
+Route::get('color/{colorId}','ProductsController@havingColor');
 
 Route::resource('cart', 'CartController');
 
